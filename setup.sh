@@ -81,7 +81,7 @@ for f in "${formulae[@]}"; do
   if brew_have "$f" || brew_have "$bare"; then
     skip "$f"
   else
-    brew install "$f" >/dev/null && ok "$f"
+    if brew install "$f"; then ok "$f"; else warn "$f failed, skipping"; continue; fi
     case "$f" in
       gh) todo "Run: gh auth login"
           todo "Generate SSH key: ssh-keygen -t ed25519 -C \"d@nielwb.com\""
@@ -109,7 +109,7 @@ for c in "${casks[@]}"; do
   if cask_have "$c"; then
     skip "$c"
   else
-    brew install --cask "$c" >/dev/null && ok "$c"
+    if brew install --cask "$c"; then ok "$c"; else warn "$c failed, skipping"; continue; fi
     case "$c" in
       google-chrome|claude|raycast)
         todo "Sign in to $c"
